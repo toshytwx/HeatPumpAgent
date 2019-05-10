@@ -1,12 +1,23 @@
 <#import "parts/common.ftl" as c>
+<#import "parts/pump.ftl" as p>
 
 <@c.page>
     <div class="my-2 card card-body">
+        <div class="my-2 card card-body">
+            <@p.pumpParam></@p.pumpParam>
+        </div>
         <div id="charts">
+            <div class="row my-2">
+                <div class="col chart-container" style="position: relative;">
+                    <canvas id="tempConditionsChart"></canvas>
+                </div>
+            </div>
             <div class="row my-2">
                 <div class="col chart-container" style="position: relative;">
                     <canvas id="heatProductivityChart"></canvas>
                 </div>
+            </div>
+            <div class="row my-2">
                 <div class="col chart-container" style="position: relative;">
                     <canvas id="powerConsumptionChart"></canvas>
                 </div>
@@ -15,12 +26,14 @@
                 <div class="col chart-container" style="position: relative;">
                     <canvas id="lossToProducedChart"></canvas>
                 </div>
+            </div>
+            <div class="row my-2">
                 <div class="col chart-container" style="position: relative;">
                     <canvas id="workLoadChart"></canvas>
                 </div>
             </div>
         </div>
-        <div id="foo" class="my-2">
+        <div class="table-responsive my-2">
             <table id="data" class="table table-bordered">
                 <thead>
                 <tr>
@@ -66,75 +79,112 @@
         </div>
     </div>
     <script>
-        var ctx = document.getElementById("heatProductivityChart").getContext('2d');
-        var temperatureData = [
-            <#list report.tempRate as t>${t}, </#list>
+        var dateData = [
+            <#list report.workDate as t>new Date("${t}".replace('T', ' ')).toLocaleString(), </#list>
         ];
         var heatProductivityData = [
             <#list report.normalizedHeatProductivity as h>${h}, </#list>
         ];
-        var nominalHeatProductivityData = new Array(heatProductivityData.length);
-        nominalHeatProductivityData.fill(${pump.heatProductivity});
+        var powerConsumptionData = [
+            <#list report.normalizedPowerConsumption as p>${p}, </#list>
+        ];
+        var heatLossData = [
+            <#list report.heatLoss as hl>${hl}, </#list>
+        ];
+        var workLoadData = [
+            <#list report.workloadRate as w>${w}, </#list>
+        ];
+        var temperatureData = [
+            <#list report.tempRate as t>${t}, </#list>
+        ];
+        var ctx0 = document.getElementById("tempConditionsChart").getContext('2d');
+        var tempConditionsChart = new Chart(ctx0, {
+            "type": "line",
+            "data": {
+                "labels": dateData,
+                "datasets": [{
+                    "label": "Temperature",
+                    "data": temperatureData,
+                    "fill": false,
+                    "borderColor": "rgb(75, 192, 192)",
+                    "lineTension": 0.1
+                }]
+            },
+            "options": {
+                "responsive": true,
+                "scales": {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Temperature'
+                        }
+                    }]
+                }
+            }
+        });
+        var ctx = document.getElementById("heatProductivityChart").getContext('2d');
         var heatProductivityChart = new Chart(ctx, {
             "type": "line",
             "data": {
-                "labels": temperatureData,
+                "labels": dateData,
                 "datasets": [{
                     "label": "Normalized heat productivity",
                     "data": heatProductivityData,
                     "fill": false,
                     "borderColor": "rgb(75, 192, 192)",
                     "lineTension": 0.1
-                },
-                    {
-                        "label": "Nominal heat productivity",
-                        "data": nominalHeatProductivityData,
-                        "fill": false,
-                        "borderColor": "rgb(255, 0, 0)",
-                        "lineTension": 0.1
-                    }]
+                }]
             },
             "options": {
-                "responsive": true
+                "responsive": true,
+                "scales": {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Heat Productivity Kw'
+                        }
+                    }]
+                }
             }
         });
         var ctx2 = document.getElementById("powerConsumptionChart").getContext('2d');
-        var powerConsumptionData = [
-            <#list report.normalizedPowerConsumption as p>${p}, </#list>
-        ];
-        var nominalPowerConsumptionData = new Array(powerConsumptionData.length);
-        nominalPowerConsumptionData.fill(${pump.powerConsumption});
         var powerConsumptionChart = new Chart(ctx2, {
             "type": "line",
             "data": {
-                "labels": temperatureData,
+                "labels": dateData,
                 "datasets": [{
                     "label": "Normalized power consumption",
                     "data": powerConsumptionData,
                     "fill": false,
                     "borderColor": "rgb(75, 192, 192)",
                     "lineTension": 0.1
-                },
-                    {
-                        "label": "Nominal power consumption",
-                        "data": nominalPowerConsumptionData,
-                        "fill": false,
-                        "borderColor": "rgb(255, 0, 0)",
-                        "lineTension": 0.1
-                    }]
+                }]
             },
             "options": {
                 "responsive": true
             }
         });
         var ctx3 = document.getElementById("lossToProducedChart").getContext('2d');
-        var heatLossData = [
-            <#list report.heatLoss as hl>${hl}, </#list>
-        ];
         var lossToProducedChart = new Chart(ctx3, {
             "type": "line",
             "data": {
-                "labels": temperatureData,
+                "labels": dateData,
                 "datasets": [
                     {
                         "label": "Produced heat",
@@ -158,13 +208,10 @@
             }
         });
         var ctx4 = document.getElementById("workLoadChart").getContext('2d');
-        var workLoadData = [
-            <#list report.workloadRate as w>${w}, </#list>
-        ];
         var lossToProducedChart = new Chart(ctx4, {
             "type": "bar",
             "data": {
-                "labels": temperatureData,
+                "labels": dateData,
                 "datasets": [
                     {
                         "label": "Workload",

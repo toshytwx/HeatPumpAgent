@@ -1,16 +1,19 @@
 <#import "parts/common.ftl" as c>
+<#import "parts/pump.ftl" as p>
 <@c.page>
     <form action="/data" method="post" class="my-2 card card-body">
-        <p class="my-2">Building and temperature:</p>
-        <div class="row mb-2">
+        <div class="row">
             <div class="col">
-                <input type="number" name="minT" class="form-control" placeholder="Min temperature (C)">
+                <label for="start">Start date:</label>
+                <input type="date" id="start" name="dateFrom" class="form-control" min="2019-01-01" max="2019-12-31">
             </div>
             <div class="col">
-                <input type="number" name="maxT" class="form-control" placeholder="Max temperature (C)">
+                <label for="end">End date:</label>
+                <input type="date" id="end" name="dateTo" class="form-control" min="2019-01-01" max="2019-12-31">
             </div>
         </div>
-        <div class="row">
+        <p class="my-2">Building and temperature:</p>
+        <div class="row my-2">
             <div class="col">
                 <select name="tempMode" class="custom-select">
                     <option selected>Select temperature mode</option>
@@ -20,67 +23,15 @@
                 </select>
             </div>
             <div class="col">
-                <input type="number" name="area" class="form-control" placeholder="Building area (sq.m)">
+                <input type="number" name="area" class="form-control" placeholder="Building area (sq.m)" step="0.1"
+                       min="0">
+            </div>
+            <div class="col">
+                <input type="number" name="loss" class="form-control" placeholder="Building heat loss (kV/h)"
+                       step="0.1" min="0">
             </div>
         </div>
-        <p class="my-2">Pump parameters:</p>
-        <div class="row">
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Nominal heat productivity</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup" value="${pump.heatProductivity}"
-                           readonly>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Nominal power consumption</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup" value="${pump.powerConsumption}"
-                           readonly>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Nominal COP</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup" value="${pump.COP}" readonly>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Energy efficiency</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup"
-                           value="${pump.energyEfficiencyAsString}" readonly>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Model</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup"
-                           value="${pump.name}" readonly>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Company</div>
-                    </div>
-                    <input type="text" class="form-control inlineFormInputGroup"
-                           value="${pump.company}" readonly>
-                </div>
-            </div>
-        </div>
+        <@p.pumpParam></@p.pumpParam>
         <input type="hidden" name="pumpId" value="${pump.id}">
         <div class="form-group row">
             <div class="col-sm-10">

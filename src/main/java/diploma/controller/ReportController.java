@@ -1,7 +1,9 @@
 package diploma.controller;
 
+import diploma.domain.entities.FormattedDate;
 import diploma.domain.entities.Pump;
 import diploma.domain.entities.Report;
+import diploma.domain.util.TemperatureData;
 import diploma.repos.PumpRepo;
 import diploma.repos.ReportRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -32,14 +35,17 @@ public class ReportController {
     @PostMapping("/data")
     public String getData(Model model,
                           @RequestParam String area,
+                          @RequestParam String loss,
                           @RequestParam String tempMode,
-                          @RequestParam String minT,
-                          @RequestParam String maxT,
-                          @RequestParam String pumpId) {
+                          @RequestParam String pumpId,
+                          @RequestParam String dateFrom,
+                          @RequestParam String dateTo) {
         Optional<Pump> pumpOption = pumpRepo.findById(Long.parseLong(pumpId));
+        Map<FormattedDate, Integer> temperatureForPeriod = TemperatureData.getTemperatureForPeriod(dateFrom + "T00:00", dateTo + "T00:00");
         if (pumpOption.isPresent()) {
             Pump pump = pumpOption.get();
-            Report report = new Report(Integer.parseInt(minT), Integer.parseInt(maxT), Integer.parseInt(tempMode), pump);
+            Double heatLoss = Double.parseDouble(area) * Double.parseDouble(loss);
+            Report report = new Report(temperatureForPeriod, Integer.parseInt(tempMode), pump, heatLoss);
             reportRepo.save(report);
             model.addAttribute("report", report);
             model.addAttribute("pump", pump);

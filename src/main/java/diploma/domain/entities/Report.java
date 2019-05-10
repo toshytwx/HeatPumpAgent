@@ -7,6 +7,8 @@ import diploma.domain.util.JSONUtil;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 public class Report {
@@ -81,22 +83,34 @@ public class Report {
     )
     private List<Double> workloadRate = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(
+            name = "Work_Date",
+            joinColumns = @JoinColumn(name = "workdate_id")
+    )
+    private List<String> workDate = new ArrayList<>();
+
     public Report() {
     }
 
-    public Report(int minT, int maxT, int temp, Pump pump) {
+    public Report(Map<FormattedDate, Integer> tempPeriod, int temp, Pump pump, Double heatLoss) {
         this.pump = pump;
+        this.workDate = tempPeriod.keySet()
+                .stream()
+                .map(FormattedDate::toString)
+                .collect(Collectors.toList());
         this.temperatureMode = TemperatureMode.getModeByTemp(temp);
-        buildReport(minT, maxT);
+        buildReport(new ArrayList<>(tempPeriod.values()), heatLoss);
     }
 
-    private void buildReport(int minT, int maxT) {
-        for (int t = minT; t <= maxT; t++) {
-            Double heatProductivityCoef = PumpDataHandler.getNormalizedHeatProductivity(t, temperatureMode);
-            Double powerConsumptionCoef = PumpDataHandler.getNormalizedPowerConsumption(t, temperatureMode);
+    private void buildReport(List<Integer> tempRate, Double heatLoss) {
+        PumpDataHandler.initValues(heatLoss);
+        for (Integer temp : tempRate) {
+            Double heatProductivityCoef = PumpDataHandler.getNormalizedHeatProductivity(temp, temperatureMode);
+            Double powerConsumptionCoef = PumpDataHandler.getNormalizedPowerConsumption(temp, temperatureMode);
             double powerConsumption = powerConsumptionCoef * pump.getPowerConsumption();
             double heatProductivity = heatProductivityCoef * pump.getHeatProductivity();
-            double heatLoses = PumpDataHandler.getHeatLoss(t);
+            double heatLoses = PumpDataHandler.getHeatLoss(temp);
             double heaterProductivityParticularTemp = heatLoses - heatProductivity;
             double approaxWorkload;
             if (heaterProductivityParticularTemp > 0) {
@@ -111,7 +125,7 @@ public class Report {
             this.normalizedHeatProductivity.add(heatProductivity);
             this.normalizedPowerConsumption.add(powerConsumption);
             this.heatLoss.add(heatLoses);
-            this.tempRate.add(t);
+            this.tempRate.add(temp);
             this.workloadRate.add(workload);
         }
     }
@@ -221,5 +235,13 @@ public class Report {
 
     public void setOwner(Customer owner) {
         this.owner = owner;
+    }
+
+    public List<String> getWorkDate() {
+        return workDate;
+    }
+
+    public void setWorkDate(List<String> workDate) {
+        this.workDate = workDate;
     }
 }

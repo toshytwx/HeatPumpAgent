@@ -17,6 +17,21 @@ public final class CorrectionData {
 
     private static void initPowerConsumption() {
         Map<Integer, Double> powerConsumptionCorrection = new TreeMap<>();
+        powerConsumptionCorrection.put(-40, 2.0);
+        powerConsumptionCorrection.put(-39, 2.0);
+        powerConsumptionCorrection.put(-38, 2.0);
+        powerConsumptionCorrection.put(-37, 2.0);
+        powerConsumptionCorrection.put(-36, 2.0);
+        powerConsumptionCorrection.put(-35, 2.0);
+        powerConsumptionCorrection.put(-34, 2.0);
+        powerConsumptionCorrection.put(-33, 2.0);
+        powerConsumptionCorrection.put(-32, 2.0);
+        powerConsumptionCorrection.put(-31, 2.0);
+        powerConsumptionCorrection.put(-30, 2.0);
+        powerConsumptionCorrection.put(-29, 2.0);
+        powerConsumptionCorrection.put(-28, 2.0);
+        powerConsumptionCorrection.put(-27, 2.0);
+        powerConsumptionCorrection.put(-26, 2.0);
         powerConsumptionCorrection.put(-25, 2.0);
         powerConsumptionCorrection.put(-24, 2.0);
         powerConsumptionCorrection.put(-23, 1.999);
@@ -58,6 +73,31 @@ public final class CorrectionData {
         powerConsumptionCorrection.put(13, 1.214);
         powerConsumptionCorrection.put(14, 1.232);
         powerConsumptionCorrection.put(15, 1.25);
+        powerConsumptionCorrection.put(16, 1.25);
+        powerConsumptionCorrection.put(17, 1.25);
+        powerConsumptionCorrection.put(18, 1.25);
+        powerConsumptionCorrection.put(19, 1.25);
+        powerConsumptionCorrection.put(20, 1.25);
+        powerConsumptionCorrection.put(21, 1.25);
+        powerConsumptionCorrection.put(22, 1.25);
+        powerConsumptionCorrection.put(23, 1.25);
+        powerConsumptionCorrection.put(24, 1.25);
+        powerConsumptionCorrection.put(25, 1.25);
+        powerConsumptionCorrection.put(26, 1.25);
+        powerConsumptionCorrection.put(27, 1.25);
+        powerConsumptionCorrection.put(28, 1.25);
+        powerConsumptionCorrection.put(29, 1.25);
+        powerConsumptionCorrection.put(30, 1.25);
+        powerConsumptionCorrection.put(31, 1.25);
+        powerConsumptionCorrection.put(32, 1.25);
+        powerConsumptionCorrection.put(33, 1.25);
+        powerConsumptionCorrection.put(34, 1.25);
+        powerConsumptionCorrection.put(35, 1.25);
+        powerConsumptionCorrection.put(36, 1.25);
+        powerConsumptionCorrection.put(37, 1.25);
+        powerConsumptionCorrection.put(38, 1.25);
+        powerConsumptionCorrection.put(39, 1.25);
+        powerConsumptionCorrection.put(40, 1.25);
 
         POWER_CONSUMPTION_CORRECTION.put(TemperatureMode.TEMP_MODE_MAX, powerConsumptionCorrection);
         for (int t = 20; t >= 15; t -= 5) {
@@ -76,7 +116,7 @@ public final class CorrectionData {
         int counter = 0;
         for (int t = 15; t <= 25; t += 5) {
             Map<Integer, Double> heatProductivityCorrection = new TreeMap<>();
-            for (int tout = -25; tout <= 15; tout++) {
+            for (int tout = -40; tout <= 40; tout++) {
                 double rate;
                 if (tout >= -15 && tout <= 5) {
                     rate = idleRate - counter * 2 * deltaRate;

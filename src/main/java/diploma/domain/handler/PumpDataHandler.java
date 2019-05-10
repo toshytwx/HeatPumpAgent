@@ -7,12 +7,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public final class PumpDataHandler {
-
     private static final Map<Integer, Double> BUILDING_HEAT_LOSS = new TreeMap<>();
 
-    static {
-        for (int t = -25; t <= 15; t++) {
-            double value = (340.0 - 17.0 * t) / 41.0;
+    private PumpDataHandler() {
+    }
+
+    public static void initValues(Double heatLoss) {
+        for (int t = -40; t <= 40; t++) {
+            double value = (heatLoss * (-t + 20)) / 42.0;
+            value = value < 0 ? 0 : value;
             BUILDING_HEAT_LOSS.put(t, value);
         }
     }
