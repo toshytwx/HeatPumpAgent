@@ -17,7 +17,7 @@ public final class TemperatureData {
 
     static {
         try {
-            XLSXUtil.readXLSXTo(hourTemperature, "C:\\Users\\dmytro.antonkin\\Univ\\gs-serving-web-content\\complete\\src\\main\\resources\\data\\temperature.xlsx");
+            XLSXUtil.readXLSXTo(hourTemperature, "src/main/resources/data/temperature.xlsx");
         } catch (IOException | InvalidFormatException e) {
             logger.error(e.getMessage());
         }
