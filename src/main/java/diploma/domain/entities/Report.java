@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Entity
@@ -90,11 +91,21 @@ public class Report {
     )
     private List<String> workDate = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(
+            name = "Temp_Freq",
+            joinColumns = @JoinColumn(name = "tempFreq_id")
+    )
+    private Map<Integer, Integer> tempFreq = new TreeMap<>();
+
     public Report() {
     }
 
-    public Report(Map<FormattedDate, Integer> tempPeriod, int temp, Pump pump, Double heatLoss) {
+    public Report(Map<FormattedDate, Integer> tempPeriod,
+                  Map<Integer, Integer> tempFreq,
+                  int temp, Pump pump, Double heatLoss) {
         this.pump = pump;
+        this.tempFreq = tempFreq;
         this.workDate = tempPeriod.keySet()
                 .stream()
                 .map(FormattedDate::toString)
@@ -243,5 +254,13 @@ public class Report {
 
     public void setWorkDate(List<String> workDate) {
         this.workDate = workDate;
+    }
+
+    public Map<Integer, Integer> getTempFreq() {
+        return tempFreq;
+    }
+
+    public void setTempFreq(Map<Integer, Integer> tempFreq) {
+        this.tempFreq = tempFreq;
     }
 }

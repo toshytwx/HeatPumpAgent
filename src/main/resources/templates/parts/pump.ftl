@@ -4,7 +4,7 @@
         <div class="col">
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                    <div class="input-group-text">Nominal heat productivity</div>
+                    <div class="input-group-text">Heat productivity</div>
                 </div>
                 <input type="text" class="form-control inlineFormInputGroup" value="${pump.heatProductivity}"
                        readonly>
@@ -13,7 +13,7 @@
         <div class="col">
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                    <div class="input-group-text">Nominal power consumption</div>
+                    <div class="input-group-text">Power consumption</div>
                 </div>
                 <input type="text" class="form-control inlineFormInputGroup" value="${pump.powerConsumption}"
                        readonly>

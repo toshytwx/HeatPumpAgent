@@ -41,16 +41,21 @@ public class ReportController {
                           @RequestParam String dateFrom,
                           @RequestParam String dateTo) {
         Optional<Pump> pumpOption = pumpRepo.findById(Long.parseLong(pumpId));
-        Map<FormattedDate, Integer> temperatureForPeriod = TemperatureData.getTemperatureForPeriod(dateFrom + "T00:00", dateTo + "T00:00");
+        dateFrom = dateFrom + "T00:00";
+        dateTo = dateTo + "T00:00";
+        Map<FormattedDate, Integer> temperatureForPeriod = TemperatureData.getTemperatureForPeriod(dateFrom, dateTo);
+        Map<Integer, Integer> temperatureFrequency = TemperatureData.getTemperatureFrequency(dateFrom, dateTo);
         if (pumpOption.isPresent()) {
             Pump pump = pumpOption.get();
             Double heatLoss = Double.parseDouble(area) * Double.parseDouble(loss);
-            Report report = new Report(temperatureForPeriod, Integer.parseInt(tempMode), pump, heatLoss);
+            Report report = new Report(temperatureForPeriod, temperatureFrequency, Integer.parseInt(tempMode), pump, heatLoss);
             reportRepo.save(report);
+            model.addAttribute("keys", temperatureFrequency.keySet());
+            model.addAttribute("values", temperatureFrequency.values());
             model.addAttribute("report", report);
             model.addAttribute("pump", pump);
         }
-        return "data";
+        return "report";
     }
 
     @GetMapping("/loadData")
@@ -62,9 +67,11 @@ public class ReportController {
         if (pumpOption.isPresent() && reportOption.isPresent()) {
             Pump pump = pumpOption.get();
             Report report = reportOption.get();
+            model.addAttribute("keys", report.getTempFreq().keySet());
+            model.addAttribute("values", report.getTempFreq().values());
             model.addAttribute("report", report);
             model.addAttribute("pump", pump);
         }
-        return "data";
+        return "report";
     }
 }
