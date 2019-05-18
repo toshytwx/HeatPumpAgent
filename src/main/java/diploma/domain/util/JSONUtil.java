@@ -1,8 +1,8 @@
 package diploma.domain.util;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public final class JSONUtil {
     private JSONUtil() {
@@ -19,34 +19,34 @@ public final class JSONUtil {
                                                List<Double> workloadCoefficient
     ) {
         StringBuilder builder = new StringBuilder();
-        NumberFormat formatter = new DecimalFormat("#0.00");
+        NumberFormat formatter = NumberFormat.getInstance(Locale.ENGLISH);
         int index = 0;
         builder.append("\"").append("[");
         for (Integer temp : temperature) {
             builder.append("{")
                     .append("\\\"temperature\\\"")
-                    .append(": ").append("\\\"").append(temp).append("\\\"")
+                    .append(": ").append(temp)
                     .append(",")
                     .append("\\\"heatLoss\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(heatLoss.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(heatLoss.get(index)))
                     .append(",")
                     .append("\\\"heatProductivityNormalizationCoefficient\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(heatProdNormCoefficient.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(heatProdNormCoefficient.get(index)))
                     .append(",")
                     .append("\\\"normalizedHeatProductivity\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(normalizedHeatProd.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(normalizedHeatProd.get(index)))
                     .append(",")
                     .append("\\\"powerConsumptionNormalizationCoefficient\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(powerConsNormCoefficient.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(powerConsNormCoefficient.get(index)))
                     .append(",")
                     .append("\\\"normalizedPowerConsumption\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(normalizedPowerCons.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(normalizedPowerCons.get(index)))
                     .append(",")
                     .append("\\\"heatProductivityOfAdditionalHeater\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(heatProdAdditionalHeater.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(heatProdAdditionalHeater.get(index)))
                     .append(",")
                     .append("\\\"workloadCoefficient\\\"")
-                    .append(": ").append("\\\"").append(formatter.format(workloadCoefficient.get(index))).append("\\\"")
+                    .append(": ").append(formatter.format(workloadCoefficient.get(index)))
                     .append("}")
                     .append(",");
             index++;

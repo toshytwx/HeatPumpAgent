@@ -3,46 +3,80 @@
 
 <@c.page>
     <div class="my-2 card card-body">
-        <p>Report:</p>
-        <div class="my-2 card card-body">
-            <div class="row">
-                <div class="col-8">
-                    <@p.pumpParam></@p.pumpParam>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="workload-tab" data-toggle="tab" href="#workload" role="tab"
+                   aria-controls="workload" aria-selected="true">Workload</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="temperature-tab" data-toggle="tab" href="#temperature" role="tab"
+                   aria-controls="temperature" aria-selected="false">Temperature</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="productivity-tab" data-toggle="tab" href="#productivity" role="tab"
+                   aria-controls="productivity" aria-selected="false">Heat Productivity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="consumption-tab" data-toggle="tab" href="#consumption" role="tab"
+                   aria-controls="consumption" aria-selected="false">Power Consumption</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="loss-tab" data-toggle="tab" href="#loss" role="tab" aria-controls="loss"
+                   aria-selected="false">Heat loss</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="mode-tab" data-toggle="tab" href="#mode" role="tab" aria-controls="mode"
+                   aria-selected="false">Temperature mode</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="workload" role="tabpanel" aria-labelledby="workload-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="bar-chart" id="tempFreqChart"></canvas>
+                    </div>
                 </div>
-                <div class="col-4 text-center">
-                    <img src="img/${pump.id}.jpg" class="img-fluid">
+            </div>
+            <div class="tab-pane" id="temperature" role="tabpanel" aria-labelledby="temperature-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="line-chart" id="tempConditionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="productivity" role="tabpanel" aria-labelledby="productivity-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="line-chart" id="heatProductivityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="consumption" role="tabpanel" aria-labelledby="consumption-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="line-chart" id="powerConsumptionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="loss" role="tabpanel" aria-labelledby="loss-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="line-chart" id="lossToProducedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="mode" role="tabpanel" aria-labelledby="mode-tab">
+                <div class="row my-2">
+                    <div class="col chart-container" style="position: relative;">
+                        <canvas class="bar-chart" id="workLoadChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="charts">
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="bar-chart" id="tempFreqChart"></canvas>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="line-chart" id="tempConditionsChart"></canvas>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="line-chart" id="heatProductivityChart"></canvas>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="line-chart" id="powerConsumptionChart"></canvas>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="line-chart" id="lossToProducedChart"></canvas>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col chart-container" style="position: relative;">
-                    <canvas class="bar-chart" id="workLoadChart"></canvas>
+        <div class="my-2 card card-body">
+            <div class="row">
+                <div class="col">
+                    <@p.pumpParam></@p.pumpParam>
                 </div>
             </div>
         </div>
@@ -94,6 +128,10 @@
     <script src="js/saveCharts.js"></script>
     <script src="js/printTable.js"></script>
     <script>
+        $(function () {
+            $('#myTab li:last-child a').tab('show')
+        })
+
         var barDictionary = {
             0: {
                 label: {
